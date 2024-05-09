@@ -1,0 +1,36 @@
+Follow: https://www.tensorflow.org/install/pip#windows-wsl2
+
+Step 1:
+    install WSL: https://learn.microsoft.com/en-us/windows/wsl/install
+
+Step 2: 
+    1. if No module named pip
+        sudo apt-get update             
+        sudo apt install python3-pip
+    2. Download CUDA support for WSL
+        # https://www.tensorflow.org/install/gpu
+        # https://docs.nvidia.com/cuda/wsl-user-guide/index.html
+
+        follow commands at:
+        # https://developer.nvidia.com/cuda-downloads?target_os=Linux&target_arch=x86_64&Distribution=WSL-Ubuntu&target_version=2.0&target_type=deb_network
+
+    3. Check if CUDA is installed
+        function lib_installed() { /sbin/ldconfig -N -v $(sed 's/:/ /' <<< $LD_LIBRARY_PATH) 2>/dev/null | grep $1; }
+        function check() { lib_installed $1 && echo "$1 is installed" || echo "ERROR: $1 is NOT installed"; }
+        check libcuda
+        check libcudart
+
+    4. check Cudnn is installed
+        function lib_installed() { /sbin/ldconfig -N -v $(sed 's/:/ /' <<< $LD_LIBRARY_PATH) 2>/dev/null | grep $1; }
+        function check() { lib_installed $1 && echo "$1 is installed" || echo "ERROR: $1 is NOT installed"; }
+        check libcudnn 
+
+        if Cudnn is not installed
+            sudo apt update && rm -rf /var/lib/apt/lists/*
+            sudo add-apt-repository multiverse
+            sudo apt update  
+
+    5. python3 -m pip install tensorflow[and-cuda]
+
+Step 4 Verify the installation:
+python3 -c "import tensorflow as tf; print(tf.config.list_physical_devices('GPU'))"
